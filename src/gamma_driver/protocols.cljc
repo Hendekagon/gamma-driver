@@ -1,6 +1,5 @@
 (ns gamma-driver.protocols)
 
-
 (defprotocol IContext
   (configure [this spec])
   (gl [this]))

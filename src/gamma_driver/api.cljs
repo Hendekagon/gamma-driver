@@ -7,7 +7,6 @@
     [gamma-driver.impl.bind :as bind]
     [gamma-driver.impl.draw :as draw]))
 
-
 ;; IContext
 
 (defn configure [this spec]
@@ -96,24 +95,6 @@
   (if (satisfies? gdp/IBindVariable this)
     (gdp/bind-uniform this program uniform data)
     (variable/bind-uniform this program uniform data)))
-
-;; IBind
-
-(defn bind
-  "Binds the program's variables as specified in spec. "
-  [this prog spec]
-  (if (satisfies? gdp/IBind this)
-    (gdp/bind this program spec)
-    (bind/bind
-      ;; need to pass these in to avoid cyclic dependency
-      {:program program
-       :array-buffer array-buffer
-       :element-array-buffer element-array-buffer
-       :texture texture
-       :bind-attribute       bind-attribute
-       :bind-texture-uniform bind-texture-uniform
-       :bind-uniform         bind-uniform}
-      this prog spec)))
 
 
 ;; IDraw

@@ -1,7 +1,8 @@
 (ns gamma-driver.drivers.basic
   (:require
     [gamma-driver.api :as gd]
-    [gamma-driver.protocols :as gdp]))
+    [gamma-driver.protocols :as gdp]
+    [gamma-driver.impl.bind :as bind]))
 
 
 ;; WebGLResourceDriver implementations wrap the low-level constructors fns
@@ -105,7 +106,7 @@
   (gl [this] gl)
 
   gdp/IResource
-  (program [this spec]   (gd/program gl spec))
+  (program [this spec](gd/program gl spec))
   (array-buffer [this spec] (produce this gd/array-buffer spec))
   (element-array-buffer [this spec] (produce this gd/element-array-buffer spec))
   (texture [this spec] (produce this gd/texture spec))
@@ -115,6 +116,17 @@
                          (gd/release gl spec)
                          (swap! resource-state dissoc k)))
 
+  gdp/IBind
+    (bind [this program spec]
+      (bind/bind
+        {:program gd/program
+         :array-buffer gd/array-buffer
+         :element-array-buffer gd/element-array-buffer
+         :texture gd/texture
+         :bind-attribute       gd/bind-attribute
+         :bind-texture-uniform gd/bind-texture-uniform
+         :bind-uniform         gd/bind-uniform}
+         this program spec))
   gdp/IBindVariable
   (bind-attribute [this program attribute input]
     (input-fn
@@ -138,11 +150,11 @@
       uniform
       input))
 
-  gdp/IDraw
-  (draw-arrays [this program spec] (draw-arrays* this program spec))
-  (draw-arrays [this program spec target] (draw-arrays* this program spec target))
-  (draw-elements [this program spec] (draw-elements* this program spec))
-  (draw-elements [this program spec target] (draw-elements* this program spec target)))
+   gdp/IDraw
+     (draw-arrays [this program spec] (draw-arrays* this program spec))
+     (draw-arrays [this program spec target] (draw-arrays* this program spec target))
+     (draw-elements [this program spec] (draw-elements* this program spec))
+     (draw-elements [this program spec target] (draw-elements* this program spec target)))
 
 
 (defn basic-driver [gl]
@@ -152,11 +164,6 @@
     (fn [x] (or (:id x) (:element x) x))
     (atom {})
     default-input-fn))
-
-
-
-
-
 
 
 (comment

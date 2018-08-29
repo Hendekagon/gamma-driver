@@ -16,21 +16,45 @@
    :stride 0
    })
 
+"
+
+Error: WebGL warning: vertexAttribPointer: -1 is not a valid `index`. This value probably comes from a getAttribLocation() call, where this return value -1 means that the passed name didn't correspond to an active attribute in the specified program. variable.cljs:30:7
+Error: WebGL warning: enableVertexAttribArray: -1 is not a valid `index`. This value probably comes from a getAttribLocation() call, where this return value -1 means that the passed name didn't correspond to an active attribute in the specified program. variable.cljs:37:7
+Error: WebGL warning: vertexAttribPointer: -1 is not a valid `index`. This value probably comes from a getAttribLocation() call, where this return value -1 means that the passed name didn't correspond to an active attribute in the specified program. variable.cljs:30:7
+Error: WebGL warning: enableVertexAttribArray: -1 is not a valid `index`. This value probably comes from a getAttribLocation() call, where this return value -1 means that the passed name didn't correspond to an active attribute in the specified program. variable.cljs:37:7
+Error: WebGL warning: vertexAttribPointer: -1 is not a valid `index`. This value probably comes from a getAttribLocation() call, where this return value -1 means that the passed name didn't correspond to an active attribute in the specified program. variable.cljs:30:7
+Error: WebGL warning: enableVertexAttribArray: -1 is not a valid `index`. This value probably comes from a getAttribLocation() call, where this return value -1 means that the passed name didn't correspond to an active attribute in the specified program.
+
+
+
+"
+
+(comment
+  "here were the args generating the above errors:"
+  '{:tag :variable, :name aVertexPosition, :type :vec3, :storage :attribute}
+  '{:id         :square-vertices, :data "#object[Float32Array 10, 10, 0, -10, 10, 0, 10, -10, 0, -10, -10, 0]",
+   :immutable? true, :usage :static-draw, :element {:tag :variable, :name aVertexPosition, :type :vec3, :storage :attribute},
+   :count      4, :array-buffer "#object[WebGLBuffer [object WebGLBuffer]]"})
 
 (defn bind-attribute [gl program attribute input]
   (let [location (attribute-location gl program attribute)
         {:keys [size type normalized? stride offset]}
         ((or (:layout input) default-layout) attribute)]
-    (.bindBuffer gl ggl/ARRAY_BUFFER (:array-buffer input))
-    (.vertexAttribPointer gl
-                          location
-                          size
-                          type
-                          normalized?
-                          stride
-                          offset)
-    (.enableVertexAttribArray gl location)
-    input))
+    (if (== location -1)
+      (do
+        ;(println "location error" attribute input)
+        input)
+      (do
+       (.bindBuffer gl ggl/ARRAY_BUFFER (:array-buffer input))
+       (.vertexAttribPointer gl
+         location
+         size
+         type
+         normalized?
+         stride
+         offset)
+       (.enableVertexAttribArray gl location)
+       input))))
 
 (defn element-index-input [gl program indices input]
   (.bindBuffer gl ggl/ELEMENT_ARRAY_BUFFER (:element-array-buffer input))
