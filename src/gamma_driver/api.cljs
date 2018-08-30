@@ -47,6 +47,7 @@
 (defn texture
   "Populates and returns a texture model suitable as input to texture-uniform-input. "
   [this spec]
+  (println " text>" (satisfies? gdp/IResource this) (:id spec) this)
   (if (satisfies? gdp/IResource this)
     (gdp/texture this spec)
     (resource/texture this spec)))

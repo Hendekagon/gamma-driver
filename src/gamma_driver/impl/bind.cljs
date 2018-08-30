@@ -65,12 +65,12 @@
     (gp/element-array-buffer driver spec)))
 
 
-(defmethod bind* :texture-uniform [{:keys [texture] :as fns} driver program variable input]
+(defmethod bind* :texture-uniform [fns driver program variable input]
   (gp/bind-texture-uniform
     driver
     program
     variable
-    (texture
+    (gp/texture
       driver
       ;; not sure if this is the right logic
       input)))

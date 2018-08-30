@@ -2,6 +2,8 @@
   (:require
     [gamma-driver.api :as gd]
     [gamma-driver.protocols :as gdp]
+    [gamma-driver.impl.resource :as gr]
+    [gamma-driver.impl.variable :as gv]
     [gamma-driver.impl.bind :as bind]))
 
 
@@ -109,7 +111,8 @@
   (program [this spec](gd/program gl spec))
   (array-buffer [this spec] (produce this gd/array-buffer spec))
   (element-array-buffer [this spec] (produce this gd/element-array-buffer spec))
-  (texture [this spec] (produce this gd/texture spec))
+  ;(texture [this spec] (produce this gd/texture spec))
+  (texture [this spec] (gr/texture gl spec))
   (frame-buffer [this spec] (produce this gd/frame-buffer spec))
   (render-buffer [this spec] (produce this gd/render-buffer spec))
   (release [this spec] (let [k (mapping-fn spec)]
@@ -119,20 +122,14 @@
   gdp/IBind
     (bind [this program spec]
       (bind/bind
-        {:program gd/program
-         :array-buffer gd/array-buffer
-         :element-array-buffer gd/element-array-buffer
-         :texture gd/texture
-         :bind-attribute       gd/bind-attribute
-         :bind-texture-uniform gd/bind-texture-uniform
-         :bind-uniform         gd/bind-uniform}
+         {}
          this program spec))
   gdp/IBindVariable
   (bind-attribute [this program attribute input]
     (input-fn
       this
       program
-      gd/bind-attribute
+      gv/bind-attribute
       attribute
       input))
   (bind-texture-uniform [this program uniform input]
