@@ -1,0 +1,12 @@
+{
+ :paths ["src"]
+ :deps
+        {
+         org.clojure/clojure       {:mvn/version "1.9.0"}
+         org.clojure/clojurescript #:mvn{:version "1.10.339"}
+         quile/component-cljs      {:mvn/version "0.2.4"}
+         hendekagon/gamma                       {:local/root "/Users/aside/projects/libs/gamma" :deps/manifest :deps}
+         ;hendekagon/gamma          {:git/url "https://github.com/Hendekagon/gamma.git" :sha "dc55bb9576a540058c9abb48904b227ac8ee5e02"}
+         thi.ng/geom               {:mvn/version "0.0.881"}
+         }
+ }
