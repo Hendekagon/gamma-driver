@@ -142,14 +142,15 @@
   ;; arraybufferview
   )
 
-(defn texture [gl {:keys [id format internal-format type data texture width height unpack filter wrap] :as spec}]
+(defn texture [gl {:keys [texture-id format internal-format type data texture width height unpack filter wrap] :as spec}]
+  (println "tex>" texture-id)
   (if (and false texture)
     spec
     (let [
             tex (.createTexture gl)
          ]
        (texture-unpack gl unpack)
-       (.activeTexture gl (+ gle/TEXTURE0 id))
+       (.activeTexture gl (+ gle/TEXTURE0 texture-id))
        (.bindTexture gl gle/TEXTURE_2D tex)
        (texture-wrap gl wrap)
        (texture-filter gl filter)

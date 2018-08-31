@@ -1,7 +1,7 @@
 (ns gamma-driver.drivers.basic
   (:require
     [gamma-driver.api :as gd]
-    [gamma-driver.protocols :as gdp]
+    [gamma-driver.protocols :as gp]
     [gamma-driver.impl.resource :as gr]
     [gamma-driver.impl.variable :as gv]
     [gamma-driver.impl.bind :as bind]))
@@ -72,7 +72,7 @@
    (if (not (input-complete? driver program))
      (throw (js/Error. "Program inputs are incomplete."))
      (gd/draw-arrays
-       (gdp/gl driver)
+       (gp/gl driver)
        program
        ;; should supply below as an arg, with defaults
        {:draw-mode (:draw-mode opts :triangles)
@@ -103,28 +103,28 @@
 
 
 (defrecord BasicDriver [gl resource-state mapping-fn input-state input-fn]
-  gdp/IContext
+  gp/IContext
   (configure [this spec] (gd/configure gl spec))
   (gl [this] gl)
 
-  gdp/IResource
+  gp/IResource
   (program [this spec](gd/program gl spec))
   (array-buffer [this spec] (produce this gd/array-buffer spec))
   (element-array-buffer [this spec] (produce this gd/element-array-buffer spec))
-  ;(texture [this spec] (produce this gd/texture spec))
-  (texture [this spec] (gr/texture gl spec))
+  (texture [this spec] (produce this gr/texture spec))
+  ;(texture [this spec] (gr/texture gl spec))
   (frame-buffer [this spec] (produce this gd/frame-buffer spec))
   (render-buffer [this spec] (produce this gd/render-buffer spec))
   (release [this spec] (let [k (mapping-fn spec)]
                          (gd/release gl spec)
                          (swap! resource-state dissoc k)))
 
-  gdp/IBind
+  gp/IBind
     (bind [this program spec]
       (bind/bind
          {}
          this program spec))
-  gdp/IBindVariable
+  gp/IBindVariable
   (bind-attribute [this program attribute input]
     (input-fn
       this
@@ -147,7 +147,7 @@
       uniform
       input))
 
-   gdp/IDraw
+   gp/IDraw
      (draw-arrays [this program spec] (draw-arrays* this program spec))
      (draw-arrays [this program spec target] (draw-arrays* this program spec target))
      (draw-elements [this program spec] (draw-elements* this program spec))
