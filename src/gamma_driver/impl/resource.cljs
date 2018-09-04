@@ -143,7 +143,7 @@
   )
 
 (defn texture [gl {:keys [texture-id format internal-format type data texture width height unpack filter wrap] :as spec}]
-  (println "tex>" texture-id)
+  ;(println "tex>" texture-id)
   (if (and false texture)
     spec
     (let [
