@@ -136,7 +136,7 @@
           (instance? js/HTMLCanvasElement d)
           (instance? js/HTMLVideoElement d))
     :image
-    (if (or (instance? js/Float32Array d) (nil? d))
+    (if (instance? js/Float32Array d)
       :pixels
       (throw (js/Error. (str "texture data type not supported: " (pr-str d)) ))))
   ;; arraybufferview
